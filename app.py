@@ -69,7 +69,7 @@ def handle_text_message(event):
     command = message[1:]
     responseMessage = ""
     if (code == "@"):
-        if (message == "hbd"):
+        if (command == "hbd"):
             responseMessage = "HBD cui"
 
     line_bot_api.reply_message(
