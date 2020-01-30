@@ -65,7 +65,8 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     message = event.message.text.lower()
-    code = event.message.text[0]
+    code = message[0]
+    command = message[1:]
     responseMessage = ""
     if (code == "@"):
         if (message == "hbd"):
