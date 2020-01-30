@@ -64,10 +64,16 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    print(event.message.text)
+    message = event.message.text.lower()
+    code = event.message.text[0]
+    responseMessage = ""
+    if (code == "@"):
+        if (message == "hbd"):
+            responseMessage = "HBD cui"
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text)
+        TextSendMessage(text=responseMessage)
     )
 
 
