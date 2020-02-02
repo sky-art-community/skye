@@ -1,0 +1,49 @@
+{
+    "data": [
+        {
+            "name": "M. Faris Pramudiansyah",
+            "nick_name": "ris",
+            "birth_date": "13-07-1999"
+        },
+        {
+            "name": "Royyan Iftikhor Amani",
+            "nick_name": "yan",
+            "birth_date": "08-06-1999"
+        },
+        {
+            "name": "M. Keimal Ihsan B.",
+            "nick_name": "mal",
+            "birth_date": "22-11-1999"
+        },
+        {
+            "name": "Harvina Yulviza",
+            "nick_name": "vin",
+            "birth_date": "20-07-1999"
+        },
+        {
+            "name": "M. Ali Hanafiah Sihotang",
+            "nick_name": "li",
+            "birth_date": "14-05-2000"
+        },
+        {
+            "name": "Nandana Ghozy Alif Furqon",
+            "nick_name": "jot",
+            "birth_date": "24-10-1999"
+        },
+        {
+            "name": "Raindeca Dzulikram Haqqu",
+            "nick_name": "dek",
+            "birth_date": "29-12-1998"
+        },
+        {
+            "name": "Rabby Ilhamdi Anggoro",
+            "nick_name": "by",
+            "birth_date": "05-01-1999"
+        },
+        {
+            "name": "Rio Ardiansyah",
+            "nick_name": "tang",
+            "birth_date": "03-12-1999"
+        }
+    ]
+}

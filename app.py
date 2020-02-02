@@ -11,13 +11,19 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+import __helper as helper
+from __controller import controller
+from __on_running_tasks import Tasks
+import time
+
+
 # Load local env
 from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
 # get LINE_CHANNEL_ACCESS_TOKEN from your environment variable
-line_bot_api = LineBotApi(
+bot = LineBotApi(
     config("LINE_CHANNEL_ACCESS_TOKEN",
            default=os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
 )
@@ -26,21 +32,6 @@ handler = WebhookHandler(
     config("LINE_CHANNEL_SECRET",
            default=os.getenv('LINE_CHANNEL_SECRET'))
 )
-
-print(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
-print(os.environ.get('LINE_CHANNEL_SECRET'))
-
-# # get LINE_CHANNEL_ACCESS_TOKEN from your environment variable
-# line_bot_api = LineBotApi(
-#     config("LINE_CHANNEL_ACCESS_TOKEN",
-#            default='d5449232756c655e65343d53477ecaaf')
-# )
-# # get LINE_CHANNEL_SECRET from your environment variable
-# handler = WebhookHandler(
-#     config("LINE_CHANNEL_SECRET",
-#            default='j4Mv5oDA2FKWmKQz6pbi0xSd3Ghhy98JzpjgJB5XDuioQHMGH7Gb3635TwKEHVO+bS2lQGwMv0Ma+T0WUVIBhJ8+5GdBiOPhsdsy20t39zmphYzY8B95IR0MmYmTutsGQRzpXpe2HdKEtvn6VeEmdwdB04t89/1O/w1cDnyilFU=')
-# )
-
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -64,21 +55,26 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    message = event.message.text.lower()
-    code = message[0]
-    command = message[1:]
-    responseMessage = ""
-    if (code == "@"):
-        if (command == "hbd"):
-            responseMessage = "HBD cui"
+    data = helper.parseMessage(event.message)
+    
+    if not data["is_valid"]: return
 
-    line_bot_api.reply_message(
+    bot.reply_message(
         event.reply_token,
-        TextSendMessage(text=responseMessage)
+        TextSendMessage(text=controller(data["command"], data["options"]))
     )
 
+
+async def on_running():
+    print("running")
+    tasks = Tasks(bot)
+    while True:
+        print("yes")
+        tasks.run()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    on_running()
+    app.run(host='localhost', port=port)
