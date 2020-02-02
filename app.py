@@ -1,5 +1,8 @@
 import os
+from pprint import pprint
 from decouple import config
+from concurrent.futures import ProcessPoolExecutor
+
 from flask import (
     Flask, request, abort
 )
@@ -15,6 +18,7 @@ import __helper as helper
 from __controller import controller
 from __on_running_tasks import Tasks
 import time
+import asyncio
 
 
 # Load local env
@@ -56,7 +60,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     data = helper.parseMessage(event.message)
-    
+    pprint(event)
     if not data["is_valid"]: return
 
     bot.reply_message(
@@ -65,16 +69,22 @@ def handle_text_message(event):
     )
 
 
-async def on_running():
+def on_running():
     print("running")
     tasks = Tasks(bot)
     while True:
-        print("yes")
         tasks.run()
         time.sleep(1)
 
+def run_app():
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='localhost', port=port)
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    on_running()
-    app.run(host='localhost', port=port)
+    executor = ProcessPoolExecutor(2)
+    loop = asyncio.get_event_loop()
+
+    loop.run_in_executor(executor, on_running)
+    loop.run_in_executor(executor, run_app)
+    
+    loop.run_forever()

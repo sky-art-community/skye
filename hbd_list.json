@@ -44,6 +44,11 @@
             "name": "Rio Ardiansyah",
             "nick_name": "tang",
             "birth_date": "03-12-1999"
+        },
+        {
+            "name": "dummy",
+            "nick_name": "dum",
+            "birth_date": "02-02-1999"
         }
     ]
 }
