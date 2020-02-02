@@ -47,8 +47,18 @@
         },
         {
             "name": "dummy",
-            "nick_name": "dum",
-            "birth_date": "02-02-1999"
+            "nick_name": "dum1",
+            "birth_date": "04-02-1999"
+        },
+        {
+            "name": "dummy",
+            "nick_name": "dum2",
+            "birth_date": "04-02-2000"
+        },
+        {
+            "name": "dummy",
+            "nick_name": "dum3",
+            "birth_date": "05-02-1999"
         }
     ]
 }

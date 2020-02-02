@@ -41,10 +41,6 @@ class HbdTask:
         person_date = datetime.strptime(person["birth_date"], DATE_FORMAT).date().replace(year=2020)
         now = datetime.now().date().replace(year=2020)
 
-        # print(person_date)
-        # print(now)
-        # print()
-
         if person_date == now:
             self.done.append(person)
             self.undone = pydash.arrays.pull(self.undone, person)
@@ -52,7 +48,8 @@ class HbdTask:
             return {
                 "should_send_message": True,
                 "to": [
-                    "U368963b7b7a0695f94fd9eb0c79b4f38"
+                    "U368963b7b7a0695f94fd9eb0c79b4f38",
+                    "Rc1d3db41d3b70dc6d706f53058f84159",
                 ],
                 "message": "HBD {}!".format(person['nick_name'])
             }
