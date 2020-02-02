@@ -78,7 +78,7 @@ def on_running():
 
 def run_app():
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='localhost', port=port)
+    app.run(host='0.0.0.0', port=port)
 
 if __name__ == "__main__":
     executor = ProcessPoolExecutor(2)
