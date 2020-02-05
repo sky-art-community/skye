@@ -33,9 +33,9 @@ Ensure you have cloned/pulled the repository to your local. Open terminal in the
 The things that you always do while developing this application.
 1. Run ngrok to make public url 
     ```sh
-    ngrok http localhost:5000/callback
+    ngrok http 0.0.0.0:5000
     ```
-2. Copy the public url the one with **https** and put it as webhook URL in LINE Bot configuration.
+2. Copy the public url the one with **https** and put it as webhook URL in LINE Bot configuration and add **/callback** at the end of the public url that you has been pasted.
 2. Run
     ```sh
     python app.py
