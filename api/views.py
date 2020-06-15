@@ -20,10 +20,27 @@ from .controller import controller
 # Create your views here.
 def status(request):
     return JsonResponse(
-        { 'isRunning': True },
+        { 'is_running': True },
         content_type = 'json',
         status = 200,
     )
+
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+def test(request):
+    # collect html
+    html = urlopen(Request(url='https://steamdb.info/sales/?min_discount=95&min_rating=0&cc=us', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'})).read() 
+    print(html)
+
+    # convert to soup
+    soup = BeautifulSoup(html, 'html.parser')
+    images = soup.select("img")
+    urls = []
+    for image in images:
+        urls.append(image.src)
+    return JsonResponse({
+        data: 4,
+    })
 
 # Line bot setup
 bot = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
