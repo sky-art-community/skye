@@ -30,7 +30,6 @@ from bs4 import BeautifulSoup
 def test(request):
     # collect html
     html = urlopen(Request(url='https://steamdb.info/sales/?min_discount=95&min_rating=0&cc=us', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'})).read() 
-    print(html)
 
     # convert to soup
     soup = BeautifulSoup(html, 'html.parser')
@@ -49,15 +48,18 @@ def images_test(request):
 
     # convert to soup
     soup = BeautifulSoup(html, 'html.parser')
-    images = soup.select("img")
+    image_tags = soup.select("img")
     urls = []
-    for image in images:
-        urls.append(image)
-    print(urls[1])
+    for image_tag in image_tags:
+        try:
+            url = image_tag['src']
+            urls.append(url)
+        except KeyError as e:
+            pass
+
     return JsonResponse({
          "type": "image",
-         "originalContentUrl": "{urls}",
-         "previewImageUrl": "{urls}"
+         "image_urls": urls,
     })
 
 
@@ -65,8 +67,8 @@ def images_test(request):
 bot = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 
-print(settings.LINE_CHANNEL_ACCESS_TOKEN)
-print(settings.LINE_CHANNEL_SECRET)
+# print(settings.LINE_CHANNEL_ACCESS_TOKEN)
+# print(settings.LINE_CHANNEL_SECRET)
 
 @csrf_exempt
 def api(request):

@@ -2,13 +2,16 @@ def status(options):
     return "Yo I'm here"
 
 
-def __showImg(options):
+def show(options):
+    # TODO: Implement show image
     pass
 
 
 # All function will be called from controller
 commands = {
     "status": status,
+    "show": show,
+    "sh": show,
 }
 
 def controller(command, options):
