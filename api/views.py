@@ -42,6 +42,25 @@ def test(request):
         data: 4,
     })
 
+def images_test(request):
+    # collect html
+    html = urlopen(Request(url='https://animenewsplus.net/2020/06/perbedaan-ova-ona-pv-dan-cm/', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'})).read() 
+    # print(html)
+
+    # convert to soup
+    soup = BeautifulSoup(html, 'html.parser')
+    images = soup.select("img")
+    urls = []
+    for image in images:
+        urls.append(image)
+    print(urls[1])
+    return JsonResponse({
+         "type": "image",
+         "originalContentUrl": "{urls}",
+         "previewImageUrl": "{urls}"
+    })
+
+
 # Line bot setup
 bot = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)

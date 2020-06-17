@@ -1,6 +1,11 @@
 def status(options):
     return "Yo I'm here"
 
+
+def __showImg(options):
+    pass
+
+
 # All function will be called from controller
 commands = {
     "status": status,
