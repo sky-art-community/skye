@@ -1,3 +1,6 @@
+# Python library
+import re
+
 # Django library
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
@@ -14,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Local libs
-from .helper import parseMessage
+from .helper import parse_message
 from .controller import controller
 
 # Create your views here.
@@ -27,19 +30,6 @@ def status(request):
 
 from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
-def test(request):
-    # collect html
-    html = urlopen(Request(url='https://steamdb.info/sales/?min_discount=95&min_rating=0&cc=us', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'})).read() 
-
-    # convert to soup
-    soup = BeautifulSoup(html, 'html.parser')
-    images = soup.select("img")
-    urls = []
-    for image in images:
-        urls.append(image.src)
-    return JsonResponse({
-        data: 4,
-    })
 
 def images_test(request):
     # collect html
@@ -67,9 +57,6 @@ def images_test(request):
 bot = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
 
-# print(settings.LINE_CHANNEL_ACCESS_TOKEN)
-# print(settings.LINE_CHANNEL_SECRET)
-
 @csrf_exempt
 def api(request):
     if request.method == "POST":
@@ -91,11 +78,13 @@ def api(request):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    data = parseMessage(event.message)
+    data = parse_message(event.message)
     
     if not data["is_valid"]: return
+    
+    message = controller(data["command"], data["options"])
 
     bot.reply_message(
         event.reply_token,
-        TextSendMessage(text=controller(data["command"], data["options"]))
+        message,
     )
