@@ -1,10 +1,11 @@
 # Skye bot
 The official of **Sky Art** bot on LINE.
 
-## Prerequiresites
+## Prerequisites
 * Python **v3.8.1**
 * Pip **v19.3.1**
 * Ngrok **v2.3.35**
+* Psql **v10.12**
 
 ## Installation
 Ensure you have cloned/pulled the repository to your local. Open terminal in the root repository and run all these commands.
@@ -24,6 +25,12 @@ Ensure you have cloned/pulled the repository to your local. Open terminal in the
     ```
 4. Create **.env** in the root repository and add environment variables as follow:
     ```sh
+    DATABASE_NAME=
+    DATABASE_USER=
+    DATABASE_PASSWORD=
+    DATABASE_HOST=
+    DATABASE_PORT=
+
     LINE_CHANNEL_SECRET=
     LINE_CHANNEL_ACCESS_TOKEN=
     ```
