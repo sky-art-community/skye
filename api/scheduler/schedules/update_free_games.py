@@ -78,7 +78,8 @@ def get_humble_free_games():
 def notify_new_free_games(new_free_games):
     last_update_date = Game.objects.order_by('updated_at').first().updated_at
     message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
-    message_text += helper.create_free_game_list(new_free_games)
+    message_text += "New free games (100% off):\n"
+    message_text += helper.create_game_list(new_free_games)
     message = TextSendMessage(text=message_text)
 
     # Get all listeners

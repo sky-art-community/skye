@@ -42,9 +42,9 @@ def load_json(url):
         }
     )).read().decode())
 
-def create_free_game_list(free_games):
-    message_text = "Free games (100% off):\n"
-    for index, game in enumerate(free_games):
+def create_game_list(games):
+    message_text = ""
+    for index, game in enumerate(games):
         message_text += "{}. [{}] {} - {}\n".format(
             index + 1,
             game.provider_name,

@@ -33,7 +33,8 @@ def info(event, options):
         
         # Set proper response message
         if len(free_games) > 0:
-            message_text += helper.create_free_game_list(free_games)
+            message_text += "Free games (100% off):\n"
+            message_text += helper.create_game_list(free_games)
         else:        
             message_text += "No free games right now"
 
