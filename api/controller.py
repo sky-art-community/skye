@@ -20,7 +20,7 @@ def show(event, options):
     pass
 
 def info(event, options):
-    # Initialize default response if no option below be matched
+    # Initialize default response if no option below will match
     message_text = "Sorry, currently we don't have that kind of information for you :("
 
     if options[0] == 'free-game':
