@@ -24,23 +24,19 @@ def extract_free_games(raw_games, extract_url, extract_id, extract_name, extract
 
 def get_steam_free_games():
     def extract_url(raw_game):
-        return raw_game['href']
+        return "https://store.steampowered.com/app/" + raw_game['data-appid']
 
     def extract_id(raw_game):
-        return raw_game['data-ds-appid']
+        return raw_game['data-appid']
 
     def extract_name(raw_game):
-        return raw_game.select_one('*[class*="title"]').get_text()
+        return raw_game.select_one('td:nth-child(3) a[href^="/app/"]').get_text()
 
     def extract_discount(raw_game):
-        raw_discount = raw_game.select_one('*[class*="search_discount"]').get_text()
-        try:
-            return float(re.search("([0-9\.]+)%", raw_discount).group(1))
-        except (ValueError, AttributeError):
-            # No discount
-            return 0
+        raw_discount = raw_game.select_one('.price-discount-major').get_text()
+        return float(re.search("([0-9\.]+)%", raw_discount).group(1))
 
-    raw_games = helper.load_page('https://store.steampowered.com/search/?sort_by=Price_ASC&maxprice=free&category1=998').select('a[data-ds-appid*=""]')
+    raw_games = helper.load_page('https://steamdb.info/sales/?min_discount=95&min_rating=0').select('.app')
     games = extract_free_games(
         raw_games,
         extract_url,
