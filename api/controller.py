@@ -29,7 +29,7 @@ def info(event, options):
         message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
 
         # Add the provider of games
-        free_games = Game.objects.all()
+        free_games = Game.objects.filter(discount=100.0)
         
         # Set proper response message
         if len(free_games) > 0:

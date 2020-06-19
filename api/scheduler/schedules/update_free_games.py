@@ -110,7 +110,7 @@ def update_free_games():
 
     new_free_games = []
     for free_game in free_games:
-        if helper.get_object_or_none(Game, game_id=free_game['id']) == None:
+        if helper.get_object_or_none(Game, game_id=free_game['id'], discount=100.0) == None:
             game = Game(
                 provider_name=free_game['provider_name'],
                 name=free_game['name'],
@@ -124,7 +124,7 @@ def update_free_games():
         
     # Delete expired free games
     undeleted_free_game_ids = [free_game['id'] for free_game in free_games]
-    Game.objects.exclude(game_id__in=undeleted_free_game_ids).delete()
+    Game.objects.filter(discount=100.0).exclude(game_id__in=undeleted_free_game_ids).delete()
 
     if len(new_free_games) > 0:
         notify_new_free_games(new_free_games)
