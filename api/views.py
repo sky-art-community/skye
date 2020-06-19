@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Local libs
-from .helper import parse_message
+from .helper import parse_message, load_page
 from .controller import controller
 
 # Simplify bot variables
