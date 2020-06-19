@@ -1,16 +1,16 @@
-image: node:latest
-
 stages:
-  - production
+  - deploy
   
-production:
+deploy:
   type: deploy
-  stage: production
+  stage: deploy
   image: ruby:latest
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - gem install dpl
     - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+    - heroku run --app $HEROKU_APP_NAME migrate
   only:
     - master

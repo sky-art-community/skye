@@ -3,10 +3,12 @@ from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 import json
 
+from django.core.exceptions import ObjectDoesNotExist
+
 PREFIX_COMMAND = '!'
 
 def parse_message(message):
-    message = message.text.lower()
+    message = message.lower()
     code = message[0]
     rest = message[1:].split()
 
@@ -15,6 +17,12 @@ def parse_message(message):
         "command": rest[0], 
         "options": rest[1:], 
     }
+
+def get_object_or_none(model, *args, **kwargs):
+    try:
+        return model.objects.get(*args, **kwargs)
+    except ObjectDoesNotExist:
+        return None
 
 def load_page(url):
     # Fetch HTML page
@@ -37,6 +45,17 @@ def load_json(url):
         }
     )).read().decode())
 
+def create_free_game_list(free_games):
+    message_text = "Free games (100% off):\n"
+    for index, game in enumerate(free_games):
+        message_text += "{}. [{}] {} - {}\n".format(
+            index + 1,
+            game.provider_name,
+            game.name,
+            game.source_url,
+        )
+
+    return message_text
 
 """
 Don't delete these, perhaps will be used in the future
