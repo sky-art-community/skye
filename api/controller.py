@@ -64,7 +64,7 @@ def notify(event, options):
                 listener_id=listener_id,
             )
             listener.save()
-            message_text = "Roger that, you will be notified of free games!"
+            message_text = "Roger that, you will be notified for free games!"
         else:
             message_text = "You already on our list for free game notification"
 
