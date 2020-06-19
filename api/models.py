@@ -5,12 +5,19 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Game(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    provider_name = models.CharField(max_length=150)
+    game_id = models.CharField(max_length=150)
     name = models.CharField(max_length=200)
+    source_url = models.CharField(max_length=255)
     original_price = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
     discount = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        default=0.0,
     )
 
     def __str__(self):

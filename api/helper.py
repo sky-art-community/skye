@@ -45,6 +45,17 @@ def load_json(url):
         }
     )).read().decode())
 
+def create_free_game_list(free_games):
+    message_text = "Free games (100% off):\n"
+    for index, game in enumerate(free_games):
+        message_text += "{}. [{}] {} - {}\n".format(
+            index + 1,
+            game.provider_name,
+            game.name,
+            game.source_url,
+        )
+
+    return message_text
 
 """
 Don't delete these, perhaps will be used in the future

@@ -19,92 +19,21 @@ def show(event, options):
     # TODO: Implement show image
     pass
 
-def extract_free_games(raw_games, extract_url, extract_id, extract_title, extract_discount):
-    free_games = []
-    for raw_game in raw_games:
-        discount = extract_discount(raw_game)
-        if discount >= 100:
-            free_games.append({
-                "url": extract_url(raw_game),
-                "id": extract_id(raw_game),
-                "title": extract_title(raw_game),
-                "discount": discount,
-            })
-
-    return free_games
-
-def get_steam_free_games():
-    def extract_url(raw_game):
-        return raw_game['href']
-
-    def extract_id(raw_game):
-        return raw_game['data-ds-appid']
-
-    def extract_title(raw_game):
-        return raw_game.select_one('*[class*="title"]').get_text()
-
-    def extract_discount(raw_game):
-        raw_discount = raw_game.select_one('*[class*="search_discount"]').get_text()
-        try:
-            return float(re.search("([0-9\.]+)%", raw_discount).group(1))
-        except (ValueError, AttributeError):
-            # No discount
-            return 0
-
-    raw_games = helper.load_page('https://store.steampowered.com/search/?sort_by=Price_ASC&maxprice=free&category1=998').select('a[data-ds-appid*=""]')
-    return extract_free_games(
-        raw_games,
-        extract_url,
-        extract_id,
-        extract_title,
-        extract_discount,
-    )
-
-def get_humble_free_games():
-    def extract_url(raw_game):
-        return 'https://www.humblebundle.com/store/' + raw_game['human_url']
-
-    def extract_id(raw_game):
-        return raw_game['human_url']
-    
-    def extract_title(raw_game):
-        return raw_game['human_name']
-
-    def extract_discount(raw_game):
-        current_price = raw_game['current_price']['amount']
-        full_price = raw_game['full_price']['amount']
-        return (1 - (current_price / full_price)) * 100
-
-    raw_games = helper.load_json("https://www.humblebundle.com/store/api/search?sort=discount&filter=all&request=1")['results']
-
-    return extract_free_games(
-        raw_games,
-        extract_url,
-        extract_id,
-        extract_title,
-        extract_discount,
-    )
-
 def info(event, options):
     # Initialize default response if no option below be matched
     message_text = "Sorry, currently we don't have that kind of information for you :("
 
     if options[0] == 'free-game':
         # Set update date
-        message_text = "Last update date: {}\n".format(datetime.now().strftime("%d-%m-%Y %T"))
-
-        # Extract free games from all providers
-        steam_games = get_steam_free_games()
-        humble_games = get_humble_free_games()
+        last_update_date = Game.objects.order_by('updated_at').first().updated_at
+        message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
 
         # Add the provider of games
-        games = [{"provider": "Steam", **game} for game in steam_games] + [{"provider": "Humble", **game} for game in humble_games]
+        free_games = Game.objects.all()
         
         # Set proper response message
-        if len(games) > 0:
-            message_text += "Free games (100% off):\n"
-            for index, game in enumerate(games):
-                message_text += "{}. [{}] {} - {}\n".format(index + 1, game['provider'], game['title'], game['url'])
+        if len(free_games) > 0:
+            message_text += helper.create_free_game_list(free_games)
         else:        
             message_text += "No free games right now"
 
