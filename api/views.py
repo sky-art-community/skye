@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
 # Line bot library
-from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
@@ -19,6 +18,10 @@ load_dotenv()
 # Local libs
 from .helper import parse_message
 from .controller import controller
+
+# Simplify bot variables
+BOT = settings.BOT
+BOT_HANDLER = settings.BOT_HANDLER
 
 # Create your views here.
 def status(request):
@@ -52,11 +55,6 @@ def images_test(request):
          "image_urls": urls,
     })
 
-
-# Line bot setup
-bot = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(settings.LINE_CHANNEL_SECRET)
-
 @csrf_exempt
 def api(request):
     if request.method == "POST":
@@ -69,22 +67,25 @@ def api(request):
         body = request.body.decode('utf-8')
         # handle webhook body
         try:
-            handler.handle(body, signature)
+            BOT_HANDLER.handle(body, signature)
         except InvalidSignatureError:
             return HttpResponseBadRequest()
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
 
-@handler.add(MessageEvent, message=TextMessage)
+@BOT_HANDLER.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    data = parse_message(event.message)
+    data = parse_message(event.message.text)
     
     if not data["is_valid"]: return
     
-    message = controller(data["command"], data["options"])
+    message = controller(event, data["command"], data["options"])
 
-    bot.reply_message(
+    BOT.reply_message(
         event.reply_token,
         message,
     )
+
+from api.scheduler.scheduler import start_scheduler
+start_scheduler()
