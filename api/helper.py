@@ -3,10 +3,12 @@ from urllib.request import urlopen, Request
 from bs4 import BeautifulSoup
 import json
 
+from django.core.exceptions import ObjectDoesNotExist
+
 PREFIX_COMMAND = '!'
 
 def parse_message(message):
-    message = message.text.lower()
+    message = message.lower()
     code = message[0]
     rest = message[1:].split()
 
@@ -15,6 +17,12 @@ def parse_message(message):
         "command": rest[0], 
         "options": rest[1:], 
     }
+
+def get_object_or_none(model, *args, **kwargs):
+    try:
+        return model.objects.get(*args, **kwargs)
+    except ObjectDoesNotExist:
+        return None
 
 def load_page(url):
     # Fetch HTML page

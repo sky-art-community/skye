@@ -78,11 +78,11 @@ def api(request):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    data = parse_message(event.message)
+    data = parse_message(event.message.text)
     
     if not data["is_valid"]: return
     
-    message = controller(data["command"], data["options"])
+    message = controller(event, data["command"], data["options"])
 
     bot.reply_message(
         event.reply_token,
