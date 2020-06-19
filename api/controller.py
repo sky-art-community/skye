@@ -29,11 +29,12 @@ def info(event, options):
         message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
 
         # Add the provider of games
-        free_games = Game.objects.all()
+        free_games = Game.objects.filter(discount=100.0)
         
         # Set proper response message
         if len(free_games) > 0:
-            message_text += helper.create_free_game_list(free_games)
+            message_text += "Free games (100% off):\n"
+            message_text += helper.create_game_list(free_games)
         else:        
             message_text += "No free games right now"
 
