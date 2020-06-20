@@ -11,6 +11,6 @@ deploy:
     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - gem install dpl
     - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
-    - heroku run --app $HEROKU_APP_NAME migrate
+    - heroku run --app $HEROKU_APP_NAME python manage.py migrate
   only:
     - master
