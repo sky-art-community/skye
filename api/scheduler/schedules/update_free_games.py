@@ -12,6 +12,13 @@ def extract_free_games(raw_games, extract_url, extract_id, extract_name, extract
     free_games = []
     for raw_game in raw_games:
         discount = extract_discount(raw_game)
+        # UNCOMMENT THIS DEBUG IF YOU NEED IT, DON'T FORGET TO COMMENT IT AGAIN BEFORE GO TO PRODUCTION
+        # print({
+        #     "url": extract_url(raw_game),
+        #     "id": extract_id(raw_game),
+        #     "name": extract_name(raw_game),
+        #     "discount": discount,
+        # })
         if discount >= 100:
             free_games.append({
                 "url": extract_url(raw_game),
@@ -33,8 +40,8 @@ def get_steam_free_games():
         return raw_game.select_one('td:nth-child(3) a[href^="/app/"]').get_text()
 
     def extract_discount(raw_game):
-        raw_discount = raw_game.select_one('.price-discount-major').get_text()
-        return float(re.search("([0-9\.]+)%", raw_discount).group(1))
+        raw_discount = raw_game.select_one('td:nth-child(4)').get_text()
+        return float(re.search(r"([0-9\.]+)%", raw_discount).group(1))
 
     raw_games = helper.load_page('https://steamdb.info/sales/?min_discount=95&min_rating=0').select('.app')
     games = extract_free_games(
@@ -74,6 +81,33 @@ def get_humble_free_games():
 
     return [{'provider_name': 'Humble', **game} for game in games]
 
+def get_epic_free_games():
+    def extract_url(raw_game):
+        return 'https://www.epicgames.com/store/en-US/product/' + raw_game["productSlug"]
+
+    def extract_id(raw_game):
+        return raw_game['id']
+    
+    def extract_name(raw_game):
+        return raw_game['title']
+
+    def extract_discount(raw_game):
+        current_price = raw_game['price']['totalPrice']["discountPrice"]
+        full_price = raw_game['price']['totalPrice']["originalPrice"]
+        return (1 - (current_price / full_price)) * 100
+
+    raw_games = helper.load_json("https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=ID&allowCountries=ID")
+    raw_games = raw_games["data"]["Catalog"]["searchStore"]["elements"]
+
+    games = extract_free_games(
+        raw_games,
+        extract_url,
+        extract_id,
+        extract_name,
+        extract_discount,
+    )
+    return [{'provider_name': 'Epic', **game} for game in games]
+
 
 def notify_new_free_games(new_free_games):
     last_update_date = Game.objects.order_by('updated_at').first().updated_at
@@ -102,6 +136,7 @@ def notify_new_free_games(new_free_games):
 FREE_GAME_EXTRACTORS = [
     get_steam_free_games,
     get_humble_free_games,
+    get_epic_free_games,
 ]
 
 def update_free_games():
