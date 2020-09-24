@@ -9,7 +9,7 @@ The official of **Sky Art** LINE bot.
     - [Run application](#run-application)
     - [Migrate a model](#migrate-a-model)
     - [Create a superuser](#create-a-superuser)
-- [Maintaners](#maintaners)
+- [Maintaners](#maintainers)
 - [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
@@ -36,6 +36,7 @@ Ensure you have cloned/pulled the repository to your local. Open terminal in the
     ```
 4. Create **.env** in the root repository and add environment variables as follow:
     ```sh
+    DBMS=
     DATABASE_NAME=
     DATABASE_USER=
     DATABASE_PASSWORD=
@@ -46,7 +47,16 @@ Ensure you have cloned/pulled the repository to your local. Open terminal in the
     LINE_CHANNEL_ACCESS_TOKEN=
     ```
     To fill values for those variables, you need to ask to **the one** who own it or use your own bot.
-
+    
+    For DBMS, here are the available DBMS you could use:
+    1. PostgreSQL
+        ```sh
+        DBMS=POSTGRESQL
+        ```
+    2. Sqlite (Django built-in)
+        ```sh
+        DBMS=SQLITE
+        ```
 
 
 ## Usage
