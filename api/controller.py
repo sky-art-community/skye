@@ -9,6 +9,7 @@ from linebot.models import TextSendMessage, ImageSendMessage, VideoSendMessage, 
 
 # Own library
 import api.helper as helper
+import api.commons as commons
 from api.models import Game, Listener 
 
 def status(event, options):
@@ -24,20 +25,7 @@ def info(event, options):
     message_text = "Sorry, currently we don't have that kind of information for you :("
 
     if options[0] == 'free-game':
-        # Add the provider of games
-        free_games = Game.objects.filter(discount=100.0)
-        
-        # Set proper response message
-        if len(free_games) > 0:
-            # Set update date
-            last_update_date = Game.objects.order_by('updated_at').first().updated_at
-            message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
-
-            # Create game list
-            message_text += "Free games (100% off):\n"
-            message_text += helper.create_game_list(free_games)
-        else:        
-            message_text = "No free games right now"
+        message_text = commons.create_free_game_list(Game.objects.filter(discount=100.0))
 
     return TextSendMessage(text=message_text)
 
