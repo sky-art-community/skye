@@ -1,8 +1,10 @@
 from django.conf import settings
 import api.helper as helper
+import api.commons as commons
 import re
 from linebot.models import TextSendMessage
 from api.models import Game, Listener
+
 
 # Simplify bot variables
 BOT = settings.BOT
@@ -118,10 +120,7 @@ def get_epic_free_games():
 
 
 def notify_new_free_games(new_free_games):
-    last_update_date = Game.objects.order_by('updated_at').first().updated_at
-    message_text = "Last update date: {}\n".format(last_update_date.strftime("%d-%m-%Y %T"))
-    message_text += "New free games (100% off):\n"
-    message_text += helper.create_game_list(new_free_games)
+    message_text = commons.create_free_game_list(new_free_games)
     message = TextSendMessage(text=message_text)
 
     # Get all listeners
