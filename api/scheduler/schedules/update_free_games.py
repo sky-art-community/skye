@@ -67,6 +67,10 @@ def get_humble_free_games():
     def extract_discount(raw_game):
         current_price = raw_game['current_price']['amount']
         full_price = raw_game['full_price']['amount']
+
+        if full_price == 0:
+            return 100
+
         return (1 - (current_price / full_price)) * 100
 
     raw_games = helper.load_json("https://www.humblebundle.com/store/api/search?sort=discount&filter=all&request=1")['results']
@@ -94,6 +98,10 @@ def get_epic_free_games():
     def extract_discount(raw_game):
         current_price = raw_game['price']['totalPrice']["discountPrice"]
         full_price = raw_game['price']['totalPrice']["originalPrice"]
+
+        if full_price == 0:
+            return 0
+
         return (1 - (current_price / full_price)) * 100
 
     raw_games = helper.load_json("https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=ID&allowCountries=ID")
