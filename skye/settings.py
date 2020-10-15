@@ -18,10 +18,10 @@ from requests_html import HTMLSession
 from dotenv import load_dotenv
 load_dotenv()
 
-LINE_CHANNEL_ACCESS_TOKEN = os.getenv('LINE_CHANNEL_ACCESS_TOKEN')
+LINE_CHANNEL_TOKEN = os.getenv('LINE_CHANNEL_TOKEN')
 LINE_CHANNEL_SECRET = os.getenv('LINE_CHANNEL_SECRET')
 
-BOT = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
+BOT = LineBotApi(LINE_CHANNEL_TOKEN)
 BOT_HANDLER = WebhookHandler(LINE_CHANNEL_SECRET)
 
 BROWSER = HTMLSession()
