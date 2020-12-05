@@ -22,10 +22,10 @@ Designed to utilize daily tasks for LINE users.
             $ sudo apt update
             $ sudo apt install python3
             ```
-        after finished install/download, check the version of your python using this command:
-            ```sh
-            python3 --version
-            ```
+    - After finished install/download, check the version of your python using this command:
+        ```sh
+        python3 --version
+        ```
 * Pip **v19.3.1**
     - You can download or install Pip using the following statement:
         - Windows
@@ -39,10 +39,10 @@ Designed to utilize daily tasks for LINE users.
             $ sudo apt update
             $ sudo apt install python3-pip
             ```
-        after finished install/download, check the version of your pip using this command:
-            ```sh
-            pip --version
-            ```
+    - After finished install/download, check the version of your pip using this command:
+        ```sh
+        pip --version
+        ```
 * Ngrok **v2.3.35**
 * Psql **v10.12** - Optional if you will use SQLITE3 instead
 
