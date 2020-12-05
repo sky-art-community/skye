@@ -15,7 +15,34 @@ Designed to utilize daily tasks for LINE users.
 
 ## Prerequisites
 * Python **v3.8.1**
+    - You can download or install python using the following statement:
+        - [Windows](https://www.python.org/downloads/windows/)
+        - Unix:
+            ```sh
+            $ sudo apt update
+            $ sudo apt install python3
+            ```
+        after finished install/download, check the version of your python using this command:
+            ```sh
+            python3 --version
+            ```
 * Pip **v19.3.1**
+    - You can download or install Pip using the following statement:
+        - Windows
+            - Download get-pip.py in this [link](https://bootstrap.pypa.io/get-pip.py)
+            - run command:
+                ```sh
+                python get-pip.py
+                ```
+        - Unix:
+            ```sh
+            $ sudo apt update
+            $ sudo apt install python3-pip
+            ```
+        after finished install/download, check the version of your pip using this command:
+            ```sh
+            pip --version
+            ```
 * Ngrok **v2.3.35**
 * Psql **v10.12** - Optional if you will use SQLITE3 instead
 
