@@ -7,6 +7,7 @@ Designed to utilitze daily tasks for LINE users.
 - [Activate and Deactivate Environment](#activate-and-deactivate-environment)
     - [Activate](#activate-environment)
     - [Deactivate](#deactivate-environment)
+- [Lint](#lint)
 - [Usage](#usage)
     - [Run application](#run-application)
     - [Migrate a model](#migrate-a-model)
@@ -71,6 +72,11 @@ This section will help you to activate and deacivate local environment through C
         deactivate
         ```
 
+## Lint
+This repository is linted by ```flake8```. In order to follow the lint's rules, please use ```black``` to format the codes. We already provided all dependencies you need in ```requirements-dev.txt```. You are free to install it through that file or install it manually. Please always run a command below everytime you are going to push it to remote branch:
+```bash
+$ flake8
+```
 ## Usage
 * ### Run application
     Before you follow these instructions, ensure that you already **activated local environment** as follow as this [section](#activate-environment). After that, here are things you need to do.
