@@ -1,5 +1,5 @@
 # Skye Bot
-Designed to utilitize daily tasks for LINE users.
+Designed to utilize daily tasks for LINE users.
 
 ## Table of Contents:
 - [Prerequisites](#prerequisites)
