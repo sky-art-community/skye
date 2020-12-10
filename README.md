@@ -44,13 +44,10 @@ Designed to utilize daily tasks for LINE users.
         pip --version
         ```
 * Ngrok **v2.3.35**
-<<<<<<< HEAD
-=======
     - You can download or install ngrok using the following statement:
         - [Windows](https://ngrok.com/download)
         - [Unix](https://ngrok.com/download)
     - For Unix user, you can manually install ngrok in snap store using the statement in this [link](https://zoomadmin.com/HowToInstall/UbuntuPackage/ngrok-client)
->>>>>>> 4b60e6aa863747fda12ff6da0e0c6f4fffdbadd9
 * Psql **v10.12** - Optional if you will use SQLITE3 instead
 
 ## Setup
