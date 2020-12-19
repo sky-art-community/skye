@@ -1,5 +1,5 @@
-# Skye bot
-Designed to utilitze daily tasks for LINE users.
+# Skye Bot
+Designed to utilize daily tasks for LINE users.
 
 ## Table of Contents:
 - [Prerequisites](#prerequisites)
@@ -15,8 +15,42 @@ Designed to utilitze daily tasks for LINE users.
 
 ## Prerequisites
 * Python **v3.8.1**
+    - You can download or install python using the following statement:
+        - [Windows](https://www.python.org/downloads/windows/)
+        - Unix:
+            ```sh
+            $ sudo apt update
+            $ sudo apt install python3
+            ```
+    - After finished install/download, check the version of your python using this command:
+        ```sh
+        python3 --version
+        ```
 * Pip **v19.3.1**
+    - You can download or install Pip using the following statement:
+        - Windows
+            - Download get-pip.py in this [link](https://bootstrap.pypa.io/get-pip.py)
+            - run command:
+                ```sh
+                python get-pip.py
+                ```
+        - Unix:
+            ```sh
+            $ sudo apt update
+            $ sudo apt install python3-pip
+            ```
+    - After finished install/download, check the version of your pip using this command:
+        ```sh
+        pip --version
+        ```
 * Ngrok **v2.3.35**
+<<<<<<< HEAD
+=======
+    - You can download or install ngrok using the following statement:
+        - [Windows](https://ngrok.com/download)
+        - [Unix](https://ngrok.com/download)
+    - For Unix user, you can manually install ngrok in snap store using the statement in this [link](https://zoomadmin.com/HowToInstall/UbuntuPackage/ngrok-client)
+>>>>>>> 4b60e6aa863747fda12ff6da0e0c6f4fffdbadd9
 * Psql **v10.12** - Optional if you will use SQLITE3 instead
 
 ## Setup
@@ -74,16 +108,20 @@ This section will help you to activate and deacivate local environment through C
 ## Usage
 * ### Run application
     Before you follow these instructions, ensure that you already **activated local environment** as follow as this [section](#activate-environment). After that, here are things you need to do.
-    1. Run ngrok to make public url 
+    1. Migrate all database
+        ```sh
+        python manage.py migrate
+        ```
+    2. After migrate, you should run ngrok to make public url 
         ```sh
         ngrok http localhost:8000
         ```
-    2. Copy the public url the one with **https** and put it as webhook URL in LINE Bot configuration.
-    2. Run the application
+    3. Copy the public url the one with **https** and put it as webhook URL in LINE Bot configuration.
+    4. Run the application
         ```sh
         python manage.py runserver
         ```
-    3. Exit by triggering a default terminate signal if you already done
+    5. Exit by triggering a default terminate signal if you already done
         ```sh
         [CTRL + C]
         ```
@@ -104,4 +142,8 @@ This section will help you to activate and deacivate local environment through C
     ```
 
 ## Maintainers
-- [Nandhika Prayoga](https://nandhika.netlify.app/)
+- [Nandhika Prayoga](https://nandhika.netlify.app/) (1706039622) 
+- [Mutia Rahmatun Husna](https://github.com/mutiarahmatun) (1706039912)
+- [Yaumi Alfadha](https://github.com/yaumialfadha) (1706023031)
+
+
