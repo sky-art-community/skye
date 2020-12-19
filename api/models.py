@@ -54,15 +54,4 @@ class Listener(models.Model):
     """
     Save for future use perhaps
     """
-    # def clean(self, *args, **kwargs):
-    #     super(Listener, self).clean(*args, **kwargs)
-    #     if self.type == Listener.Type.USER and self.user_id == None:
-    #         raise ValidationError(_("Listener should contain user_id if the type is USER"))
-        
-    #     if self.type in [Listener.Type.ROOM, Listener.Type.GROUP] and (self.user_id == None or self.group_id == None):
-    #         raise ValidationError(_("Listener should contain user_id and group_id if the type is ROOM or GROUP"))
-
-
-    # def save(self, *args, **kwargs):
-    #     super(Listener, self).full_clean(exclude=None)
-    #     super(Listener, self).save(*args, **kwargs)
+ 
