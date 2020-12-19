@@ -2,6 +2,7 @@
 Designed to utilitze daily tasks for LINE users.
 
 ## Table of Contents:
+- [Programmer's guide](contributing.md)
 - [Prerequisites](#prerequisites)
 - [Setup](#setup)
 - [Activate and Deactivate Environment](#activate-and-deactivate-environment)
