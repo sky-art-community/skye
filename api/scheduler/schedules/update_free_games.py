@@ -4,6 +4,7 @@ import api.commons as commons
 import re
 from linebot.models import TextSendMessage
 from api.models import Game, Listener
+from django.db.utils import OperationalError, ProgrammingError
 
 
 # Simplify bot variables
@@ -169,32 +170,35 @@ FREE_GAME_EXTRACTORS = [
 
 
 def update_free_games():
-    free_games = []
-    for extrator in FREE_GAME_EXTRACTORS:
-        free_games += extrator()
+    try:
+        free_games = []
+        for extrator in FREE_GAME_EXTRACTORS:
+            free_games += extrator()
 
-    new_free_games = []
-    for free_game in free_games:
-        if (
-            helper.get_object_or_none(Game, game_id=free_game["id"], discount=100.0)
-            is None
-        ):
-            game = Game(
-                provider_name=free_game["provider_name"],
-                name=free_game["name"],
-                source_url=free_game["url"],
-                game_id=free_game["id"],
-                original_price=0.0,
-                discount=free_game["discount"],
-            )
-            game.save()
-            new_free_games.append(game)
+        new_free_games = []
+        for free_game in free_games:
+            if (
+                helper.get_object_or_none(Game, game_id=free_game["id"], discount=100.0)
+                is None
+            ):
+                game = Game(
+                    provider_name=free_game["provider_name"],
+                    name=free_game["name"],
+                    source_url=free_game["url"],
+                    game_id=free_game["id"],
+                    original_price=0.0,
+                    discount=free_game["discount"],
+                )
+                game.save()
+                new_free_games.append(game)
 
-    # Delete expired free games
-    undeleted_free_game_ids = [free_game["id"] for free_game in free_games]
-    Game.objects.filter(discount=100.0).exclude(
-        game_id__in=undeleted_free_game_ids
-    ).delete()
+        # Delete expired free games
+        undeleted_free_game_ids = [free_game["id"] for free_game in free_games]
+        Game.objects.filter(discount=100.0).exclude(
+            game_id__in=undeleted_free_game_ids
+        ).delete()
 
-    if len(new_free_games) > 0:
-        notify_new_free_games(new_free_games)
+        if len(new_free_games) > 0:
+            notify_new_free_games(new_free_games)
+    except (OperationalError, ProgrammingError):
+        pass

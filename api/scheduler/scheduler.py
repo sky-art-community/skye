@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # Local schedules
-from api.scheduler.schedules import update_free_games
+# from api.scheduler.schedules import update_free_games
 
 
 class ScheduledTask:
@@ -30,9 +30,14 @@ class ScheduledTask:
         return self.__callback_delay
 
 
+def empty_task():
+    pass
+
+
 # Set all scheduled tasks
 SCHEDULED_TASKS = [
-    ScheduledTask(update_free_games.update_free_games, hours=1, call_at_first=True),
+    ScheduledTask(empty_task, hours=10)
+    # ScheduledTask(update_free_games.update_free_games, hours=1, call_at_first=True),
 ]
 
 
