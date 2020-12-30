@@ -1,16 +1,16 @@
 # Python library
 from datetime import datetime
-from urllib.request import urlopen, Request
-import re
-import json
 
 # Line library
-from linebot.models import TextSendMessage, ImageSendMessage, VideoSendMessage, AudioSendMessage
+from linebot.models import (
+    TextSendMessage,
+)
 
 # Own library
 import api.helper as helper
 import api.commons as commons
-from api.models import Game, Listener 
+from api.models import Game, Listener
+
 
 def status(event, options):
     return TextSendMessage(text="Yo I'm here")
@@ -20,14 +20,18 @@ def show(event, options):
     # TODO: Implement show image
     pass
 
+
 def info(event, options):
     # Initialize default response if no option below will match
     message_text = "Sorry, currently we don't have that kind of information for you :("
 
-    if options[0] == 'free-game':
-        message_text = commons.create_free_game_list(Game.objects.filter(discount=100.0))
+    if options[0] == "free-game":
+        message_text = commons.create_free_game_list(
+            Game.objects.filter(discount=100.0)
+        )
 
     return TextSendMessage(text=message_text)
+
 
 def notify(event, options):
     message_text = "Sorry, we don't have that kind of notification, let us know if you expect us to have that"
@@ -37,11 +41,11 @@ def notify(event, options):
         creator_id = event.source.user_id
         listener_id = None
 
-        if source_type == 'user':
+        if source_type == "user":
             listener_id = creator_id
-        if source_type == 'group':
+        if source_type == "group":
             listener_id = event.source.group_id
-        elif source_type == 'room':
+        elif source_type == "room":
             listener_id = event.source.room_id
 
         # Check has been on list or not
@@ -59,6 +63,7 @@ def notify(event, options):
 
     return TextSendMessage(text=message_text)
 
+
 def stop_notify(event, options):
     message_text = "Sorry, we don't have that kind of notification"
 
@@ -66,22 +71,23 @@ def stop_notify(event, options):
         source_type = event.source.type
         listener_id = None
 
-        if source_type == 'user':
+        if source_type == "user":
             listener_id = event.source.user_id
-        if source_type == 'group':
+        if source_type == "group":
             listener_id = event.source.group_id
-        elif source_type == 'room':
+        elif source_type == "room":
             listener_id = event.source.room_id
 
         listener = helper.get_object_or_none(Listener, listener_id=listener_id)
-        
-        if listener != None:
+
+        if listener is not None:
             listener.delete()
             message_text = "Thank you for using our service :)"
         else:
             message_text = "You are not even on our list before :)"
 
     return TextSendMessage(text=message_text)
+
 
 # All function will be called from controller
 commands = {
@@ -93,6 +99,7 @@ commands = {
     "info": info,
 }
 
+
 def controller(event, command, options):
     try:
         handler = commands[command]
@@ -100,8 +107,16 @@ def controller(event, command, options):
         return TextSendMessage(text="Sorry, can't recognize your command")
 
     try:
-        print("[{}] {} {}".format(datetime.now().strftime("%d-%m-%Y %T"), command.upper(), " ".join(options)))
+        print(
+            "[{}] {} {}".format(
+                datetime.now().strftime("%d-%m-%Y %T"),
+                command.upper(),
+                " ".join(options),
+            )
+        )
         return handler(event, options)
     except Exception as e:
         print(str(e))
-        return TextSendMessage(text="Something is wrong, please make sure you are commanding correctly or read the documentation from !help")
+        return TextSendMessage(
+            text="Something is wrong, please make sure you are commanding correctly or read the documentation from !help"
+        )

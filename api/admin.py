@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import *
+from api.models import Game, Listener
 
 # Register your models here.
 admin.site.register(Game)

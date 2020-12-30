@@ -130,3 +130,9 @@ dmypy.json
 
 # IDE
 .vscode
+settings.json
+
+# Load test output
+**/output_failures.csv
+**/output_stats_history.csv
+**/output_stats.csv

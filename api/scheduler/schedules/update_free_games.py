@@ -4,13 +4,21 @@ import api.commons as commons
 import re
 from linebot.models import TextSendMessage
 from api.models import Game, Listener
+from django.db.utils import OperationalError, ProgrammingError
 
 
 # Simplify bot variables
 BOT = settings.BOT
 BOT_HANDLER = settings.BOT_HANDLER
 
-def extract_free_games(raw_games, extract_url, extract_id, extract_name, extract_discount):
+
+def extract_free_games(
+    raw_games,
+    extract_url,
+    extract_id,
+    extract_name,
+    extract_discount,
+):
     free_games = []
     for raw_game in raw_games:
         discount = extract_discount(raw_game)
@@ -22,30 +30,35 @@ def extract_free_games(raw_games, extract_url, extract_id, extract_name, extract
         #     "discount": discount,
         # })
         if discount >= 100:
-            free_games.append({
-                "url": extract_url(raw_game),
-                "id": extract_id(raw_game),
-                "name": extract_name(raw_game),
-                "discount": discount,
-            })
+            free_games.append(
+                {
+                    "url": extract_url(raw_game),
+                    "id": extract_id(raw_game),
+                    "name": extract_name(raw_game),
+                    "discount": discount,
+                }
+            )
 
     return free_games
 
+
 def get_steam_free_games():
     def extract_url(raw_game):
-        return "https://store.steampowered.com/app/" + raw_game['data-appid']
+        return "https://store.steampowered.com/app/" + raw_game["data-appid"]
 
     def extract_id(raw_game):
-        return raw_game['data-appid']
+        return raw_game["data-appid"]
 
     def extract_name(raw_game):
         return raw_game.select_one('td:nth-child(3) a[href^="/app/"]').get_text()
 
     def extract_discount(raw_game):
-        raw_discount = raw_game.select_one('td:nth-child(4)').get_text()
+        raw_discount = raw_game.select_one("td:nth-child(4)").get_text()
         return float(re.search(r"([0-9\.]+)%", raw_discount).group(1))
 
-    raw_games = helper.load_page('https://steamdb.info/sales/?min_discount=95&min_rating=0').select('.app')
+    raw_games = helper.load_page(
+        "https://steamdb.info/sales/?min_discount=95&min_rating=0"
+    ).select(".app")
     games = extract_free_games(
         raw_games,
         extract_url,
@@ -54,28 +67,31 @@ def get_steam_free_games():
         extract_discount,
     )
 
-    return [{'provider_name': 'Steam', **game} for game in games]
+    return [{"provider_name": "Steam", **game} for game in games]
+
 
 def get_humble_free_games():
     def extract_url(raw_game):
-        return 'https://www.humblebundle.com/store/' + raw_game['human_url']
+        return "https://www.humblebundle.com/store/" + raw_game["human_url"]
 
     def extract_id(raw_game):
-        return raw_game['human_url']
-    
+        return raw_game["human_url"]
+
     def extract_name(raw_game):
-        return raw_game['human_name']
+        return raw_game["human_name"]
 
     def extract_discount(raw_game):
-        current_price = raw_game['current_price']['amount']
-        full_price = raw_game['full_price']['amount']
+        current_price = raw_game["current_price"]["amount"]
+        full_price = raw_game["full_price"]["amount"]
 
         if full_price == 0:
             return 100
 
         return (1 - (current_price / full_price)) * 100
 
-    raw_games = helper.load_json("https://www.humblebundle.com/store/api/search?sort=discount&filter=all&request=1")['results']
+    raw_games = helper.load_json(
+        "https://www.humblebundle.com/store/api/search?sort=discount&filter=all&request=1"
+    )["results"]
 
     games = extract_free_games(
         raw_games,
@@ -85,28 +101,33 @@ def get_humble_free_games():
         extract_discount,
     )
 
-    return [{'provider_name': 'Humble', **game} for game in games]
+    return [{"provider_name": "Humble", **game} for game in games]
+
 
 def get_epic_free_games():
     def extract_url(raw_game):
-        return 'https://www.epicgames.com/store/en-US/product/' + raw_game["productSlug"]
+        return (
+            "https://www.epicgames.com/store/en-US/product/" + raw_game["productSlug"]
+        )
 
     def extract_id(raw_game):
-        return raw_game['id']
-    
+        return raw_game["id"]
+
     def extract_name(raw_game):
-        return raw_game['title']
+        return raw_game["title"]
 
     def extract_discount(raw_game):
-        current_price = raw_game['price']['totalPrice']["discountPrice"]
-        full_price = raw_game['price']['totalPrice']["originalPrice"]
+        current_price = raw_game["price"]["totalPrice"]["discountPrice"]
+        full_price = raw_game["price"]["totalPrice"]["originalPrice"]
 
         if full_price == 0:
             return 0
 
         return (1 - (current_price / full_price)) * 100
 
-    raw_games = helper.load_json("https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=ID&allowCountries=ID")
+    raw_games = helper.load_json(
+        "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=ID&allowCountries=ID"
+    )
     raw_games = raw_games["data"]["Catalog"]["searchStore"]["elements"]
 
     games = extract_free_games(
@@ -116,7 +137,7 @@ def get_epic_free_games():
         extract_name,
         extract_discount,
     )
-    return [{'provider_name': 'Epic', **game} for game in games]
+    return [{"provider_name": "Epic", **game} for game in games]
 
 
 def notify_new_free_games(new_free_games):
@@ -140,35 +161,44 @@ def notify_new_free_games(new_free_games):
     for group_listener in group_listeners:
         BOT.push_message(group_listener.listener_id, message)
 
+
 FREE_GAME_EXTRACTORS = [
     get_steam_free_games,
     get_humble_free_games,
     get_epic_free_games,
 ]
 
+
 def update_free_games():
-    free_games = []
-    for extrator in FREE_GAME_EXTRACTORS:
-        free_games += extrator()
+    try:
+        free_games = []
+        for extrator in FREE_GAME_EXTRACTORS:
+            free_games += extrator()
 
-    new_free_games = []
-    for free_game in free_games:
-        if helper.get_object_or_none(Game, game_id=free_game['id'], discount=100.0) == None:
-            game = Game(
-                provider_name=free_game['provider_name'],
-                name=free_game['name'],
-                source_url=free_game['url'],
-                game_id=free_game['id'],
-                original_price=0.0,
-                discount=free_game['discount'],
-            )
-            game.save()
-            new_free_games.append(game)
-        
-    # Delete expired free games
-    undeleted_free_game_ids = [free_game['id'] for free_game in free_games]
-    Game.objects.filter(discount=100.0).exclude(game_id__in=undeleted_free_game_ids).delete()
+        new_free_games = []
+        for free_game in free_games:
+            if (
+                helper.get_object_or_none(Game, game_id=free_game["id"], discount=100.0)
+                is None
+            ):
+                game = Game(
+                    provider_name=free_game["provider_name"],
+                    name=free_game["name"],
+                    source_url=free_game["url"],
+                    game_id=free_game["id"],
+                    original_price=0.0,
+                    discount=free_game["discount"],
+                )
+                game.save()
+                new_free_games.append(game)
 
-    if len(new_free_games) > 0:
-        notify_new_free_games(new_free_games)
-    
+        # Delete expired free games
+        undeleted_free_game_ids = [free_game["id"] for free_game in free_games]
+        Game.objects.filter(discount=100.0).exclude(
+            game_id__in=undeleted_free_game_ids
+        ).delete()
+
+        if len(new_free_games) > 0:
+            notify_new_free_games(new_free_games)
+    except (OperationalError, ProgrammingError):
+        pass
