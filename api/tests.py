@@ -25,4 +25,7 @@ class GameTestCase(TestCase):
     def test_url_api(self):
         response = self.client.get('/api')        
         self.assertEqual(response.status_code, 200)
+    def test_url_api_wrong(self):
+        response = self.client.get('/apiasd')        
+        self.assertEqual(response.status_code, 404)
 
