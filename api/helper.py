@@ -45,22 +45,3 @@ def load_json(url):
 """
 Don't delete these, perhaps will be used in the future
 """
-# class MessageTemplate:
-#     # Enums
-#     TEXT = 1
-#     AUDIO = 2
-#     IMAGE = 3
-#     VIDEO = 4
-
-#     def __init__(self, type, content):
-#         if not isinstance(content, dict): 
-#             raise ValueError("Content should be dict type")
-
-#         self.__type = type
-#         self.__content = content
-
-#     def get_type(self):
-#         return self.__type
-
-#     def get_content(self):
-#         return self.__content

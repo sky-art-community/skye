@@ -31,7 +31,11 @@ class ScheduledTask:
 
 # Set all scheduled tasks
 SCHEDULED_TASKS = [
+<<<<<<< HEAD
     ScheduledTask(update_free_games.update_free_games, hours=1, call_at_first=True),
+=======
+    # ScheduledTask(update_free_games.update_free_games, hours=1, call_at_first=True),
+>>>>>>> 4b60e6aa863747fda12ff6da0e0c6f4fffdbadd9
 ]
 
 # Start all scheduled tasks
